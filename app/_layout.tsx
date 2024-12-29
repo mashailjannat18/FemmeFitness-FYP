@@ -4,9 +4,10 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { StatusBar } from 'react-native';
 import 'react-native-reanimated';
-
 import { useColorScheme } from '@/components/useColorScheme';
+import { UserAuthProvider } from '@/context/UserAuthContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,11 +50,15 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <UserAuthProvider>
+      <ThemeProvider value={DefaultTheme}>
+        <StatusBar hidden={false} barStyle="dark-content" />
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(screens)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          </Stack>
+      </ThemeProvider>
+    </UserAuthProvider>
   );
 }
