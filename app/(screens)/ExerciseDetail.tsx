@@ -49,7 +49,6 @@ export default function ExerciseDetail() {
       <View style={styles.content}>
         <Text style={styles.title}>Description</Text>
         <Text style={styles.description}>{exerciseDetail.exercise_description}</Text>
-        <Text>This text is to check git push</Text>
 
         <Text style={styles.title}>Video</Text>
         <Text style={styles.videoLink}>{exerciseDetail.video_url}</Text>
