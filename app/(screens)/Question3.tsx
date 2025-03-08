@@ -6,11 +6,13 @@ import { setUserData } from '../../datafiles/userData';
 
 const Question3: React.FC = () => {
   const [selectedHeight, setSelectedHeight] = useState<number | null>(null);
-  const heightRange = Array.from({ length: 41 }, (_, i) => (3 + i * 0.1).toFixed(1)); 
+
+  // Adjusted height range from 3.0 feet to 6.5 feet (in increments of 0.1 feet)
+  const heightRange = Array.from({ length: 36 }, (_, i) => (3 + i * 0.1).toFixed(1));
 
   const handleHeightSelect = (height: string) => {
     const selected = parseFloat(height);
-    setSelectedHeight(selected); 
+    setSelectedHeight(selected);
     setUserData('height', selected);
   };
 
@@ -52,26 +54,26 @@ const Question3: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
     backgroundColor: '#fff',
-    paddingTop: 200,
   },
   text: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#333',
   },
   optionsContainer: {
     width: 200,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 5, 
+    padding: 5,
     marginTop: 20,
   },
   pickerContainer: {
-    width: '100%', 
+    width: '100%',
+    borderRadius: 8,
+    borderWidth: 2, // Updated border width
+    borderColor: '#a9a9a9', // Added border color
   },
   picker: {
     height: 55,
@@ -90,6 +92,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 8,
     marginHorizontal: 10,
+    elevation: 3,
   },
   buttonText: {
     color: 'white',

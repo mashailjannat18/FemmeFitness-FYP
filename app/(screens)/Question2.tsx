@@ -1,23 +1,39 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { setUserData } from '../../datafiles/userData'; 
+import { setUserData } from '../../datafiles/userData';
 
 const Question2: React.FC = () => {
   const [selectedWeight, setSelectedWeight] = useState<string>('');
-  const router = useRouter(); 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const router = useRouter();
 
   const handleWeightChange = (text: string) => {
+    // Allow only numeric input
     if (/^\d*$/.test(text)) {
-      setSelectedWeight(text); 
+      setSelectedWeight(text);
+
+      // Validate weight (must be 25 or above)
+      const weight = parseInt(text, 10);
+      if (weight < 25 && text !== '') {
+        setErrorMessage('Weight must be 25 kg or above.');
+      } else {
+        setErrorMessage('');
+      }
     }
   };
 
   const handleNext = () => {
-    console.log(`Next pressed, selectedWeight: ${selectedWeight}`); 
-    
+    console.log(`Next pressed, selectedWeight: ${selectedWeight}`);
+
     if (selectedWeight === '') {
       Alert.alert('Field Required', 'Please enter your weight before proceeding.', [
+        {
+          text: 'OK',
+        },
+      ]);
+    } else if (parseInt(selectedWeight, 10) < 25) {
+      Alert.alert('Invalid Weight', 'Weight must be 25 kg or above.', [
         {
           text: 'OK',
         },
@@ -25,7 +41,7 @@ const Question2: React.FC = () => {
     } else {
       setUserData('weight', selectedWeight);
       setTimeout(() => {
-        router.push('/(screens)/Question3'); 
+        router.push('/(screens)/Question3');
       }, 500);
     }
   };
@@ -38,19 +54,20 @@ const Question2: React.FC = () => {
         placeholder="Enter your weight in kg"
         keyboardType="numeric"
         value={selectedWeight}
-        onChangeText={handleWeightChange} 
+        onChangeText={handleWeightChange}
       />
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.backButton]}
-          onPress={() => router.push('/(screens)/Question1')} 
+          onPress={() => router.push('/(screens)/Question1')}
         >
           <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, selectedWeight === '' && styles.disabledButton]} 
+          style={[styles.button, (selectedWeight === '' || parseInt(selectedWeight, 10) < 25) && styles.disabledButton]}
           onPress={handleNext}
-          disabled={selectedWeight === ''}
+          disabled={selectedWeight === '' || parseInt(selectedWeight, 10) < 25}
         >
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
@@ -62,15 +79,15 @@ const Question2: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start', 
-    alignItems: 'center',
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
     backgroundColor: '#fff',
-    paddingTop: 200, 
   },
   text: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10, 
+    marginBottom: 10,
+    color: '#333',
   },
   input: {
     width: '80%',
@@ -81,6 +98,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 18,
     marginVertical: 20,
+  },
+  errorText: {
+    color: '#e74c3c',
+    fontSize: 14,
+    marginTop: -10,
+    marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -94,6 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 8,
     marginHorizontal: 10,
+    elevation: 3,
   },
   buttonText: {
     color: 'white',
@@ -101,10 +125,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   backButton: {
-    backgroundColor: '#a9a9a9', 
+    backgroundColor: '#a9a9a9',
   },
   disabledButton: {
-    backgroundColor: '#a9a9a9', 
+    backgroundColor: '#a9a9a9',
   },
 });
 

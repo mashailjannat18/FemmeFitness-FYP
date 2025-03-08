@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 40,
     textAlign: 'center',
+    color: '#333',
   },
   dropdownContainer: {
     width: '80%',
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    elevation: 3,
   },
   dropdownText: {
     color: '#fff',
@@ -110,12 +112,13 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 8,
     alignItems: 'center',
+    backgroundColor: '#f8f8f8',
   },
   selectedOption: {
     backgroundColor: '#d63384',
   },
   unselectedOption: {
-    backgroundColor: '#ccc', 
+    backgroundColor: '#ccc',
   },
   optionText: {
     color: '#fff',
@@ -123,10 +126,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center', 
+    justifyContent: 'center',
     width: '80%',
     marginTop: 20,
-    gap: 10, 
+    gap: 10,
   },
   button: {
     paddingVertical: 8,
@@ -136,15 +139,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 100,
     height: 40,
+    elevation: 3,
   },
   backButton: {
     backgroundColor: '#ccc',
   },
   activeButton: {
-    backgroundColor: '#d63384', 
+    backgroundColor: '#d63384',
   },
   disabledButton: {
-    backgroundColor: '#ccc', 
+    backgroundColor: '#ccc',
   },
   buttonText: {
     color: '#fff',

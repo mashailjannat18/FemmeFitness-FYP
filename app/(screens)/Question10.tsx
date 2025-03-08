@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 40,
     textAlign: 'center',
+    color: '#333',
   },
   input: {
     width: '80%',
@@ -154,6 +155,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 40,
     marginHorizontal: 3,
+    elevation: 3,
   },
   backButton: {
     backgroundColor: '#ccc',

@@ -5,25 +5,26 @@ import { setUserData } from '../../datafiles/userData';
 
 const Question1: React.FC = () => {
   const [selectedAge, setSelectedAge] = useState<number | null>(null);
-  const router = useRouter(); 
+  const router = useRouter();
 
-  const ageRange = Array.from({ length: 90 }, (_, i) => i + 1); 
+  // Adjusted age range from 14 to 90
+  const ageRange = Array.from({ length: 90 - 12 + 1 }, (_, i) => i + 14);
 
   const handleAgeSelect = (age: number) => {
-    setSelectedAge(age); 
-    console.log(`Age selected: ${age}`); 
+    setSelectedAge(age);
+    console.log(`Age selected: ${age}`);
   };
 
   const handleNext = () => {
-    console.log(`Next pressed, selectedAge: ${selectedAge}`); 
-    
+    console.log(`Next pressed, selectedAge: ${selectedAge}`);
+
     if (selectedAge === null) {
-      console.log('No age selected, showing alert'); 
+      console.log('No age selected, showing alert');
       Alert.alert('Field Required', 'Please select your age before proceeding.', [
         {
           text: 'OK',
           onPress: () => {
-            console.log('Alert closed'); 
+            console.log('Alert closed');
           },
         },
       ]);
@@ -41,15 +42,15 @@ const Question1: React.FC = () => {
     <TouchableOpacity
       style={[
         styles.ageItem,
-        item === selectedAge && styles.selectedAge, 
+        item === selectedAge && styles.selectedAge,
       ]}
-      onPress={() => handleAgeSelect(item)} 
+      onPress={() => handleAgeSelect(item)}
     >
       <Text
         style={[
           styles.ageText,
-          item === selectedAge && styles.selectedAgeText, 
-          (selectedAge !== null && (item === selectedAge - 1 || item === selectedAge + 1)) && styles.boldAgeText, 
+          item === selectedAge && styles.selectedAgeText,
+          (selectedAge !== null && (item === selectedAge - 1 || item === selectedAge + 1)) && styles.boldAgeText,
         ]}
       >
         {item}
@@ -72,14 +73,14 @@ const Question1: React.FC = () => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.backButton]}
-          onPress={() => router.push('/(screens)')} 
+          onPress={() => router.push('/(screens)')}
         >
           <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, selectedAge === null && styles.disabledButton]} 
+          style={[styles.button, selectedAge === null && styles.disabledButton]}
           onPress={handleNext}
-          disabled={selectedAge === null} 
+          disabled={selectedAge === null}
         >
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
@@ -91,21 +92,22 @@ const Question1: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start', 
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#fff',
-    paddingTop: 150, 
+    paddingTop: 150,
   },
   text: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10, 
+    marginBottom: 10,
+    color: '#333',
   },
   ageListContainer: {
-    height: 300, 
+    height: 300,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10, 
+    marginTop: 10,
   },
   ageList: {
     alignItems: 'center',
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
   },
   selectedAge: {
     borderWidth: 2,
-    borderColor: '#d63384', 
+    borderColor: '#d63384',
     borderRadius: 10,
   },
   ageText: {
@@ -128,10 +130,10 @@ const styles = StyleSheet.create({
   selectedAgeText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#d63384', 
+    color: '#d63384',
   },
   boldAgeText: {
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -145,6 +147,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 8,
     marginHorizontal: 10,
+    elevation: 3,
   },
   buttonText: {
     color: 'white',

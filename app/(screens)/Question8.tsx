@@ -69,12 +69,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    fontSize: 32, 
+    fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 40,
     color: '#d63384',
     textAlign: 'center',
-    fontFamily: 'Arial', 
   },
   optionsContainer: {
     width: '80%',
@@ -87,26 +86,27 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#bbb', 
+    borderColor: '#bbb',
+    backgroundColor: '#f8f8f8',
   },
   selectedOption: {
-    backgroundColor: '#d63384', 
-    borderColor: '#d63384', 
+    backgroundColor: '#d63384',
+    borderColor: '#d63384',
   },
   unselectedOption: {
-    backgroundColor: 'white', 
+    backgroundColor: 'white',
   },
   optionText: {
-    color: '#000', 
+    color: '#000',
     fontSize: 18,
     fontWeight: 'bold',
   },
   selectedOptionText: {
-    color: '#fff', 
+    color: '#fff',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly', 
+    justifyContent: 'space-evenly',
     width: '80%',
     marginTop: 20,
   },
@@ -118,15 +118,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 100,
     height: 40,
+    elevation: 3,
   },
   backButton: {
-    backgroundColor: '#ccc', 
+    backgroundColor: '#ccc',
   },
   activeButton: {
-    backgroundColor: '#d63384', 
+    backgroundColor: '#d63384',
   },
   disabledButton: {
-    backgroundColor: '#ccc', 
+    backgroundColor: '#ccc',
   },
   buttonText: {
     color: '#fff',
