@@ -1,191 +1,101 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Image, View, Text, FlatList, ScrollView, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { useRouter, useNavigation } from 'expo-router';
 import { supabase } from '@/lib/supabase';
-import { AntDesign } from '@expo/vector-icons';
-
-type Exercises = {
-  id: number;
-  exercise_name: string;
-  image: string;
-  repetitions: number;
-};
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Exercises() {
-  const { day = 'Day 1' } = useLocalSearchParams();
+  const [exercises, setExercises] = useState<any[]>([]);
+  const [completedExercises, setCompletedExercises] = useState<string[]>([]);
   const router = useRouter();
-  const [exercises, setExercises] = useState<Exercises[]>([]);
+  const navigation = useNavigation(); // Get the navigation instance
 
   useEffect(() => {
     fetchExercises();
+    loadCompletedExercises();
   }, []);
+
+  useEffect(() => {
+    // Ensure the back button navigates to the workout screen
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => router.back()} style={{ marginLeft: 10 }}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const fetchExercises = async () => {
     try {
-      const { data, error } = await supabase
-        .from('Exercises')
-        .select('id, exercise_name, image, repetitions');
-
-      if (error) {
-        console.error('Error fetching exercises:', error.message);
-      } else {
-        setExercises(data || []);
-      }
+      const { data, error } = await supabase.from('Exercises').select('*');
+      if (error) throw error;
+      setExercises(data || []);
     } catch (err) {
-      console.error('Unexpected error:', err);
+      console.error('Error fetching exercises:', err);
     }
   };
 
-  const renderExercise = ({ item }: { item: Exercises }) => (
-    <TouchableOpacity
-      style={styles.listItem}
-      onPress={() => router.push(`/ExerciseDetail?id=${item.id}`)}
-    >
-      <Image source={{ uri: item.image }} style={styles.exerciseImage} />
-      <View style={styles.exerciseInfo}>
-        <Text style={styles.exerciseName}>{item.exercise_name}</Text>
-        <Text style={styles.repetitions}>Reps: {item.repetitions}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const loadCompletedExercises = async () => {
+    try {
+      const storedExercises = await AsyncStorage.getItem('completedExercises');
+      if (storedExercises) {
+        setCompletedExercises(JSON.parse(storedExercises));
+      }
+    } catch (error) {
+      console.error('Error loading completed exercises:', error);
+    }
+  };
+
+  const allExercisesCompleted = exercises.length > 0 && completedExercises.length === exercises.length;
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>{day}</Text>
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.headerText}>Exercises</Text>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.playButton}>
-          <AntDesign name="play" size={100} color="#d63384" />
-        </TouchableOpacity>
-      </View>
+      <FlatList
+        data={exercises}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.listItem}
+            onPress={() => router.push(`/ExerciseDetail?id=${item.id}`)}
+          >
+            <Image source={{ uri: item.image }} style={styles.exerciseImage} />
+            <View style={styles.exerciseInfo}>
+              <Text style={styles.exerciseName}>{item.exercise_name}</Text>
+              <Text style={styles.repetitions}>{item.repetitions} reps</Text>
+            </View>
+            {completedExercises.includes(item.id) && (
+              <Ionicons name="checkmark-circle" style={styles.checkIcon} />
+            )}
+          </TouchableOpacity>
+        )}
+      />
 
-      <View style={styles.fixedBar}>
-        <View style={styles.barItem}>
-          <Text style={styles.barTitle}>Calories:</Text>
-          <Text style={styles.barValue}>200 kcal</Text>
-        </View>
-        <View style={styles.barItem}>
-          <Text style={styles.barTitle}>Duration:</Text>
-          <Text style={styles.barValue}>30 min</Text>
-        </View>
-      </View>
-
-      <View style={styles.content}>
-        <Text style={styles.title}>Exercise for {day}</Text>
-        <Text style={styles.description}>
-          Here is the workout plan for {day}.
-        </Text>
-
-        <FlatList
-          data={exercises}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderExercise}
-          contentContainerStyle={styles.listContainer}
-          scrollEnabled={false}
-        />
-      </View>
-    </ScrollView>
+      {/* Finish Button (Enabled only when all exercises are completed) */}
+      <TouchableOpacity
+        style={[styles.doneButton, !allExercisesCompleted && styles.disabledButton]}
+        disabled={!allExercisesCompleted}
+        onPress={() => console.log('All exercises completed!')}
+      >
+        <Text style={styles.doneButtonText}>Finish</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    paddingTop: 40,
-    paddingBottom: 16,
-    backgroundColor: '#d63384',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginTop: -25,
-  },
-  buttonContainer: {
-    paddingTop: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  playButton: {
-    elevation: 5,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 8,
-  },
-  fixedBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#f0f0f0',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    marginBottom: 16,
-  },
-  barItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  barTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginRight: 8,
-  },
-  barValue: {
-    fontSize: 16,
-    fontWeight: '400',
-  },
-  content: {
-    paddingHorizontal: 16,
-    paddingBottom: 40,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 16,
-    color: '#555',
-    marginBottom: 16,
-  },
-  listContainer: {
-    paddingBottom: 16,
-    marginBottom: 20,
-  },
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 15,
-    elevation: 5,
-  },
-  exerciseImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 12,
-  },
-  exerciseInfo: {
-    flex: 1,
-  },
-  exerciseName: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  repetitions: {
-    fontSize: 14,
-    color: '#666',
-  },
+  container: { flex: 1, backgroundColor: '#fff', padding: 20 },
+  headerText: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 },
+  listItem: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ddd' },
+  exerciseImage: { width: 80, height: 80, borderRadius: 10, marginRight: 10 },
+  exerciseInfo: { flex: 1 },
+  exerciseName: { fontSize: 18, fontWeight: 'bold' },
+  repetitions: { fontSize: 14, color: '#555' },
+  checkIcon: { fontSize: 24, color: 'green', marginLeft: 10 },
+  doneButton: { backgroundColor: '#ff69b4', padding: 15, borderRadius: 10, marginTop: 20, alignItems: 'center' },
+  disabledButton: { backgroundColor: '#ccc' },
+  doneButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
 });

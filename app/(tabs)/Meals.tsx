@@ -10,7 +10,10 @@ export default function Meals() {
 
   // Function to navigate to MealDetail screen and pass the day number as 'day'
   const navigateToMealDetail = (meal: string, dayNumber: number) => {
-    router.push(`../(screens)/MealDetail?meal=${meal}&day=${dayNumber}`); // Pass meal name and day number
+    router.push({
+      pathname: '../(screens)/MealDetail',
+      params: { meal, day: dayNumber }, // Pass meal name and day number
+    });
   };
 
   return (

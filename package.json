@@ -27,12 +27,8 @@
     "phoenix": "^1.7.20",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-<<<<<<< HEAD
     "react-native": "^0.76.5",
     "react-native-calendars": "^1.1310.0",
-=======
-    "react-native": "0.76.7",
->>>>>>> f5bf663f17cfbf2219f254cc54106da7728072af
     "react-native-elements": "^3.4.3",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",

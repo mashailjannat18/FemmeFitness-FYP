@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars'; // Import calendar component
-import { useNavigation } from '@react-navigation/native'; // Import the navigation hook
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'; // Import navigation types
-import { RootTabParamList } from './NavigationTypes'; // Import the param list
-
-// Define the navigation prop type
-type NavigationProp = BottomTabNavigationProp<RootTabParamList, 'OvulationTracker'>;
+import { router } from 'expo-router'; // Import Expo Router's router
+import XDate from 'xdate'; // Import XDate
 
 export default function OvulationTracker() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const navigation = useNavigation<NavigationProp>(); // Initialize navigation with correct types
 
   // Handle date selection from the calendar
   const handleDayPress = (day: any) => {
@@ -20,9 +15,27 @@ export default function OvulationTracker() {
   const currentDate = new Date();
   const currentMonth = currentDate.toISOString().slice(0, 7); // Get current month in 'YYYY-MM' format
 
-  // Function to navigate to Periods screen
-  const navigateToPeriods = () => {
-    navigation.navigate('Periods'); // Correctly navigate to the Periods screen
+  // Handle Log Period button press
+  const handleLogPeriodPress = () => {
+    router.push('/(screens)/Periods'); // Correct route path
+  };
+
+  // Handle History button press
+  const handleHistoryPress = () => {
+    router.push('/(screens)/PeriodsHistory'); // Navigate to PeriodsHistory screen
+  };
+
+  // Custom header component
+  const renderHeader = (date?: XDate) => {
+    if (!date) return null; // Handle undefined case
+
+    const month = date.toString('MMMM'); // Get full month name
+    const year = date.getFullYear(); // Get year
+    return (
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>{`${month} ${year}`}</Text>
+      </View>
+    );
   };
 
   return (
@@ -30,9 +43,9 @@ export default function OvulationTracker() {
       {/* Calendar on top */}
       <View style={styles.calendarContainer}>
         <Calendar
-          current={currentMonth}  // Set current month
+          current={currentMonth} // Set current month
           onDayPress={handleDayPress}
-          monthFormat={'yyyy MM'} // Format to display year and month
+          monthFormat={'MMMM yyyy'} // Format to display full month name and year
           markingType={'dot'} // Marking type for selected dates
           markedDates={{
             [selectedDate || '']: {
@@ -43,9 +56,11 @@ export default function OvulationTracker() {
           }}
           style={styles.calendar}
           horizontal={true} // Enable horizontal scrolling
-          pagingEnabled={false} // Disable paging between months
-          showSixWeeks={false} // Only show the current month
+          pagingEnabled={true} // Enable paging between months
+          hideExtraDays={true} // Hide days from other months
           firstDay={1} // Start the week on Monday
+          enableSwipeMonths={false} // Disable swiping between months
+          renderHeader={renderHeader} // Custom header component
           theme={{
             selectedDayBackgroundColor: '#ff69b4', // Pink background for selected date
             selectedDayTextColor: 'white',
@@ -70,13 +85,26 @@ export default function OvulationTracker() {
 
       {/* Log Period TouchableOpacity */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={navigateToPeriods} style={styles.optionButton}>
+        <TouchableOpacity
+          onPress={handleLogPeriodPress} // Handle button press
+          style={styles.optionButton}
+        >
           <Text style={styles.optionText}>Log Period</Text>
         </TouchableOpacity>
       </View>
 
       {/* My Cycles Text */}
       <Text style={styles.myCyclesText}>My Cycles</Text>
+
+      {/* History Button */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          onPress={handleHistoryPress} // Handle button press
+          style={[styles.optionButton, { backgroundColor: '#4CAF50' }]} // Green color for the button
+        >
+          <Text style={styles.optionText}>History</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -91,15 +119,26 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 20, // Ensure marginBottom is defined here
     alignItems: 'center',
   },
   calendar: {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 10,
-    height: 350, // Adjust calendar height as needed
-    width: '100%',
+    height: 350, // Fixed height for the calendar
+    width: '100%', // Ensure the calendar takes full width
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ff69b4', // Pink color for header text
   },
   cycleDayText: {
     fontSize: 18,
@@ -114,21 +153,18 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
-    width: '40%', // Adjust width to make the button smaller
-    backgroundColor: 'red',
-    borderRadius: 5,
-    paddingVertical: 5, // Reduce padding for a smaller button
+    width: '30%', // Adjust width to make the button smaller
     alignSelf: 'center', // Center the button horizontally
   },
   optionButton: {
-    backgroundColor: '#ff69b4', // Pink color for the button
+    backgroundColor: 'red', // Red color for the button
     borderRadius: 5,
     paddingVertical: 10, // Padding for button height
     alignItems: 'center', // Center text inside button
   },
   optionText: {
     fontSize: 16,
-    color: 'white', // Text color
+    color: 'white', // White text color
     fontWeight: 'bold',
   },
   myCyclesText: {
