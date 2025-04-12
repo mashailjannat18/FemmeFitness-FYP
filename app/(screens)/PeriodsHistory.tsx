@@ -1,5 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
 
@@ -23,13 +28,11 @@ function PeriodsHistory() {
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Header Section (No Back Arrow) */}
       <View style={styles.header}>
         <Text style={styles.heading}>📅 Periods History</Text>
         <Text style={styles.subHeading}>Track your cycle with ease</Text>
       </View>
 
-      {/* Scrollable Calendar Section */}
       {pastMonths.map((month, index) => (
         <View key={index} style={styles.calendarContainer}>
           <Text style={styles.monthHeader}>
@@ -37,26 +40,29 @@ function PeriodsHistory() {
           </Text>
           <Calendar
             current={month}
-            style={styles.calendar}
             hideExtraDays={true}
             firstDay={1}
+            disableMonthChange={true}
+            enableSwipeMonths={false}
+            hideArrows={true}
             theme={{
-              monthTextColor: '#ff69b4',
-              dayTextColor: '#333',
-              textDayFontWeight: 'bold',
+              backgroundColor: '#ffffff',
+              calendarBackground: '#ffffff',
+              monthTextColor: '#FF69B4', // Pink color for the month header
+              dayTextColor: '#000000', // Black dates
+              textDayFontWeight: 'normal', // Changed to 'normal' to remove bold from dates
               textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: 'bold',
-              backgroundColor: '#fff',
-              calendarBackground: '#fff',
-              selectedDayBackgroundColor: '#ff69b4',
+              textDayHeaderFontWeight: 'normal', // Weekday headers already normal
+              selectedDayBackgroundColor: '#FF69B4',
               selectedDayTextColor: '#fff',
-              todayTextColor: '#ff69b4',
-              arrowColor: '#ff69b4',
-              textSectionTitleColor: '#ff69b4',
+              todayTextColor: '#000000', // Black today date
+              arrowColor: '#FF69B4',
+              textSectionTitleColor: '#FF69B4', // Pink for section titles
               textDisabledColor: '#d3d3d3',
-              dotColor: '#ff69b4',
+              dotColor: '#FF69B4',
               selectedDotColor: '#fff',
             }}
+            style={styles.calendar}
           />
         </View>
       ))}
@@ -67,23 +73,23 @@ function PeriodsHistory() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    paddingBottom: 40,
     backgroundColor: '#fff',
+    paddingBottom: 40,
+    paddingTop: 20,
   },
   header: {
-    paddingTop: 20,
-    paddingBottom: 10,
     alignItems: 'center',
+    marginBottom: 20,
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ff4081',
+    color: 'black', // Keep this black for heading
   },
   subHeading: {
     fontSize: 14,
-    color: '#777',
-    marginBottom: 10,
+    color: 'grey', // Subheading in grey
+    marginTop: 4,
   },
   calendarContainer: {
     width: '90%',
@@ -92,26 +98,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 15,
     padding: 15,
-    shadowColor: '#ff69b4',
+    shadowColor: '#8B004F',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 5,
     borderWidth: 1,
-    borderColor: '#ffb6c1',
+    borderColor: '#d28ca4', // Border color for the calendar container
   },
   monthHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ff4081',
+    color: 'brown', // Month header color (noted inconsistency, see below)
     marginBottom: 10,
     textAlign: 'center',
   },
   calendar: {
     borderWidth: 1,
-    borderColor: '#ffb6c1',
+    borderColor: '#d28ca4',
     borderRadius: 12,
-    minHeight: 320,
     width: '100%',
   },
 });

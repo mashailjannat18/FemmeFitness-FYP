@@ -1,4 +1,6 @@
-import { StyleSheet, Image, ScrollView,TouchableOpacity } from 'react-native';
+import React from 'react';
+
+import { StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRouter } from 'expo-router';
 
@@ -64,10 +66,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 8,
+    color: '#FF1493', // Color change for the title
   },
   description: {
     fontSize: 16,
     marginBottom: 16,
+    color: '#555', // Color change for the description
   },
   options: {
     marginTop: 16,
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
   optionText: {
     color: 'black',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: 'bold', // Make days bold
     textAlign: 'center',
   },
 });
